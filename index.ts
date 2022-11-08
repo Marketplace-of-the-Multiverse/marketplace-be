@@ -8,6 +8,7 @@ import {
     getMintData,
     insertUserActionLog,
     getAllNftFromEvm,
+    getHolderNftFromEvm,
     insertNft,
     getMetadata
 } from './src/API';
@@ -24,13 +25,14 @@ process.on('uncaughtException', function (err) {
 
 //create app
 const port = 8081;
-const whitelists = JSON.parse(process.env.CORS_WHITELIST!);
+// const whitelists = JSON.parse(process.env.CORS_WHITELIST!);
+// console.log(process.env.CORS_WHITELIST!);
 
 let app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors({
-    origin: whitelists,
+    // origin: whitelists,
     credentials: true
 }));
 
@@ -60,7 +62,7 @@ app.get('/getTokenTxs/:chainId/:tokenId', async function(req, res) {
     try {
         const chainId = Number(req.params['chainId']);
         const tokenId = Number(req.params['tokenId']);
-        const data = await estimateAxelarGasFee(chainId, tokenId);
+        const data = await getTokenTxs(chainId, tokenId);
         return res.json(data);
     }
 
@@ -82,27 +84,38 @@ app.get('/premint/:chainId', async function(req, res) {
     }
 });
 
+// all holder nfts
+app.get('/holderNfts/:address', async function(req, res) {
+    const address = req.params['address'];
+    let listedOnly: any = req.query['listedOnly'] ?? 'false';
+    listedOnly = JSON.parse(listedOnly);
+    return res.json(await getHolderNftFromEvm(address, listedOnly));
+});
+
 // all listed nft
 app.get('/gallery', async function(req, res) {
-    return getAllNftFromEvm(true);
+    return res.json(await getAllNftFromEvm(true));
 });
 
 // all nft
 app.get('/allNft', async function(req, res) {
-    return getAllNftFromEvm();
+    return res.json(await getAllNftFromEvm());
 });
 
+// get nft metadata
 app.get('/metadata/:hash', async function(req, res) {
-    return getMetadata(req.params['hash']);
+    return res.json(await getMetadata(req.params['hash']));
 });
 
 // logging purpose only
 app.post('/mint', async function(req, res) {
+    // Images to be uploaded to Moralis IPFS
+    // https://www.youtube.com/watch?v=8YGPCNhuyKU
     try {
         // insert action
         const nft: Nft = {
-            chain_id: req.body.chain_id,
-            token_id: req.body.token_id,
+            chain_id: req.body.fromChain,
+            token_id: req.body.tokenId,
             hash: req.body.hash,
             name: req.body.name,
             creator: req.body.address,
@@ -112,7 +125,7 @@ app.post('/mint', async function(req, res) {
 
         const log: UserActionLog = {
             address: req.body.address,
-            nft_id: req.body.nftId, // get from contract currentToken + 1 (agak-agak first lol)
+            token_id: req.body.tokenId, // get from contract currentToken + 1 (agak-agak first lol)
             from_chain: req.body.fromChain,
             to_chain: req.body.toChain,
             is_crosschain: req.body.fromChain == req.body.toChain,
@@ -129,6 +142,7 @@ app.post('/mint', async function(req, res) {
     }
 
     catch(e) {
+        console.log(e);
         return res.status(400).send("Unknown Error");
     }
 });
@@ -139,7 +153,7 @@ app.post('/listNft', async function(req, res) {
         // insert action
         const log: UserActionLog = {
             address: req.body.address,
-            nft_id: req.body.nftId,
+            token_id: req.body.tokenId,
             from_chain: req.body.fromChain,
             to_chain: req.body.toChain,
             is_crosschain: req.body.fromChain == req.body.toChain,
@@ -166,7 +180,7 @@ app.post('/delistNft', async function(req, res) {
         // insert action
         const log: UserActionLog = {
             address: req.body.address,
-            nft_id: req.body.nftId,
+            token_id: req.body.tokenId,
             from_chain: req.body.fromChain,
             to_chain: req.body.toChain,
             is_crosschain: req.body.fromChain == req.body.toChain,

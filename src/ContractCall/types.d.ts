@@ -1,8 +1,8 @@
 export type ListedToken = {
-    tokenId: number;
+    tokenId: string;
     owner: string;
     seller: string;
-    price: number;
+    price: string;
     currentlyListed: boolean;
     reservedUntil: number;
     lastReservedBy: string;

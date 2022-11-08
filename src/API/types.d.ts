@@ -10,7 +10,7 @@ export type Nft = {
 
 export type UserActionLog = {
     address: string,
-    nft_id: number,
+    token_id: number,
     from_chain: number,
     to_chain: number,
     is_crosschain: boolean,

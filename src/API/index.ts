@@ -28,6 +28,8 @@ const isTestnet = process.env.CHAIN_ENV === "testnet";
 
 const ETHEREUM_ADDRESS_LENGTH = 42;
 
+const AvailableChain = chains.chainConfigs;
+
 const sanitizeAddress = (address : string) => {
     address = address.replace(/ /g, "");
     address = address.trim();
@@ -49,16 +51,19 @@ export const insertUserActionLog = async(data: UserActionLog) => {
     const table = 'user_action_log';
     const columns = [
         'address',
-        'nft_id',
+        'token_id',
         'from_chain',
         'to_chain',
         'is_crosschain',
         'action',
         'tx_hash'
     ];
-    let values: any[][] = [];
 
-    values.push(data as any);
+    let values: any[][] = [];
+    console.log(data);
+
+    const flattenData = _.values(data);
+    values.push(flattenData);
 
     const query = getInsertQuery(columns, values, table, true);
     return await db.executeQueryForSingleResult(query);
@@ -84,10 +89,11 @@ export const insertNft = async(data: Nft, log: UserActionLog) => {
     ];
     let values: any[][] = [];
 
-    values.push(data as any);
+    const flattenData = _.values(data);
+    values.push(flattenData);
 
+    await insertUserActionLog(log);
     const query = getInsertQuery(columns, values, table, true);
-    insertUserActionLog(log);
 
     return await db.executeQueryForSingleResult(query);
 }
@@ -164,50 +170,69 @@ export const getAllNftFromEvm = async (listedOnly: boolean = false) => { // get 
     let nfts: ListedToken[][] = [];
     await Promise.all(
         _.map(chains, async(chain: ChainConfig) => {
-            // initiate ethers
+            if (_.includes(AvailableChain, chain.id)) {
+                // initiate ethers
+                const etherCall = new ContractCall(chain.id);
+                // raw result which included indexes and key/value pair
+                let result: ListedToken[] = await etherCall.getAllNFTs(listedOnly);
 
-            const etherCall = new ContractCall(chain.id);
-            const result: ListedToken[] = await etherCall.getAllNFTs(listedOnly);
-            let filteredResult: ListedToken[] = [];
-            const nftIds = _.map(result, (arr) => arr.tokenId);
+                // format data, remove all the indexes
+                const formattedResult: ListedToken[] = [];
+                for (let re of result) {
+                    const temp: any = {
+                        tokenId: (re.tokenId).toString(),
+                        owner: re.owner,
+                        seller: re.seller,
+                        price: (re.price).toString(),
+                        currentlyListed: re.currentlyListed,
+                        reservedUntil: Number(re.reservedUntil.toString()),
+                        lastReservedBy: re.lastReservedBy
+                    };
 
-            // filter listed or all
-            _.map(result, (arr) => {
-                if (listedOnly && arr.currentlyListed) {
-                    filteredResult.push(arr);
-                    nftIds.push(arr.tokenId);
-                } else if (!listedOnly) {
-                    filteredResult.push(arr);
-                    nftIds.push(arr.tokenId);
+                    formattedResult.push(temp);
                 }
-            });
 
-            const nftQuery = `
-                SELECT
-                    *
-                FROM nft
-                WHERE token_id IN (${ _.join(nftIds, ', ') }) AND chain_id = ${chain.id};
-            `;
+                let filteredResult: ListedToken[] = [];
+                const nftIds = _.map(formattedResult as ListedToken[], (arr) => arr.tokenId);
 
-            const db = new DB();
+                // filter listed or all
+                _.map(formattedResult as ListedToken[], (arr) => {
+                    if (listedOnly && arr.currentlyListed) {
+                        filteredResult.push(arr);
+                        nftIds.push(arr.tokenId);
+                    } else if (!listedOnly) {
+                        filteredResult.push(arr);
+                        nftIds.push(arr.tokenId);
+                    }
+                });
 
-            const metadata: any = await db.executeQueryForResults(nftQuery);
-            const sortedMetadata: any = {};
-            _.map(metadata, (md) => {
-                sortedMetadata[md.token_id] = md;
-            });
+                const nftQuery = `
+                    SELECT
+                        *
+                    FROM nft
+                    WHERE token_id IN (${ _.join(nftIds, ', ') }) AND chain_id = ${chain.id};
+                `;
 
-            // get metadata from db
-            _.map(filteredResult, (farr, fIndex) => {
-                filteredResult[fIndex].metadata = sortedMetadata[farr.tokenId];
-            });
+                const db = new DB();
 
-            // nft with metadata
-            nfts.push(filteredResult);
-        })
+                const metadata: any = await db.executeQueryForResults(nftQuery);
+                const sortedMetadata: any = {};
+                _.map(metadata, (md) => {
+                    sortedMetadata[md.token_id] = md;
+                });
+
+                // get metadata from db
+                _.map(filteredResult, (farr, fIndex) => {
+                    filteredResult[fIndex].metadata = sortedMetadata[farr.tokenId] || { chain_id: chain.id };
+                });
+
+                // nft with metadata
+                nfts.push(filteredResult);
+            } // if
+        }) // map
     );
 
-    return nfts;
+    return _.flatten(nfts);
 }
 
 export const estimateAxelarGasFee = async(fromChainId: number, toChainId: number) => {
@@ -255,14 +280,19 @@ export const getTokenTxs = async(chainId: number, tokenId: number) => {
     // covalent only return 300?? results per request and 5req/s
     const config = {
         method: 'GET',
-        url: `https://api.covalenthq.com/v1/${ chain.id }/tokens/${ chain.nftMarketplace }/${ tokenId }/?&key=${ process.env.COVALENT }`,
+        url: `https://api.covalenthq.com/v1/${ chain.id }/tokens/${ chain.nftMarketplace }/nft_transactions/${ tokenId }/?&key=${ process.env.COVALENT }`,
         headers: headers
     }
 
     const data: any = await axiosCall(headers, config);
+
+    console.log(data);
     // do some filter to format nice data output
     // prev.owner -> price -> curr.owner
 
+    if (_.isNil(data)) {
+        return []
+    }
     return data.data.items;
 }
 
@@ -354,51 +384,70 @@ export const getHolderNftFromEvm = async (holder:string, listedOnly: boolean = f
     let nfts: ListedToken[][] = [];
     await Promise.all(
         _.map(chains, async(chain: ChainConfig) => {
-            // initiate ethers
-            const etherCall = new ContractCall(chain.id);
+            if (_.includes(AvailableChain, chain.id)) {
+                // initiate ethers
+                const etherCall = new ContractCall(chain.id);
 
-            // get result from evm
-            const result: ListedToken[] = await etherCall.getHolderNFTs(holder, listedOnly);
-            let filteredResult: ListedToken[] = [];
-            const nftIds: any[] = [];
+                // get result from evm
+                const result: ListedToken[] = await etherCall.getHolderNFTs(holder, listedOnly);
+                
+                // format data, remove all the indexes
+                const formattedResult: ListedToken[] = [];
+                for (let re of result) {
+                    const temp: any = {
+                        tokenId: (re.tokenId).toString(),
+                        owner: re.owner,
+                        seller: re.seller,
+                        price: (re.price).toString(),
+                        currentlyListed: re.currentlyListed,
+                        reservedUntil: Number(re.reservedUntil.toString()),
+                        lastReservedBy: re.lastReservedBy
+                    };
 
-            // filter listed or all
-            _.map(result, (arr) => {
-                if (listedOnly && arr.currentlyListed) {
-                    filteredResult.push(arr);
-                    nftIds.push(arr.tokenId);
-                } else if (!listedOnly) {
-                    filteredResult.push(arr);
-                    nftIds.push(arr.tokenId);
+                    formattedResult.push(temp);
                 }
-            });
 
-            const nftQuery = `
-                SELECT
-                    *
-                FROM nft
-                WHERE token_id IN (${ _.join(nftIds, ', ') }) AND chain_id = ${chain.id};
-            `;
+                let filteredResult: ListedToken[] = [];
+                const nftIds = _.map(formattedResult as ListedToken[], (arr) => arr.tokenId);
 
-            const db = new DB();
+                // filter listed or all
+                _.map(formattedResult, (arr) => {
+                    if (listedOnly && arr.currentlyListed) {
+                        filteredResult.push(arr);
+                        nftIds.push(arr.tokenId);
+                    } else if (!listedOnly) {
+                        filteredResult.push(arr);
+                        nftIds.push(arr.tokenId);
+                    }
+                });
 
-            const metadata: any = await db.executeQueryForResults(nftQuery);
-            const sortedMetadata: any = {};
-            _.map(metadata, (md) => {
-                sortedMetadata[md.token_id] = md;
-            });
+                const nftQuery = `
+                    SELECT
+                        *
+                    FROM nft
+                    WHERE token_id IN (${ _.join(nftIds, ', ') }) AND chain_id = ${chain.id};
+                `;
 
-            // get metadata from db
-            _.map(filteredResult, (farr, fIndex) => {
-                filteredResult[fIndex].metadata = sortedMetadata[farr.tokenId];
-            });
+                const db = new DB();
 
-            // nft with metadata
-            nfts.push(filteredResult);
-        })
+                const metadata: any = await db.executeQueryForResults(nftQuery);
+                const sortedMetadata: any = {};
+                _.map(metadata, (md) => {
+                    sortedMetadata[md.token_id] = md;
+                });
+
+                // get metadata from db
+                _.map(filteredResult, (farr, fIndex) => {
+                    filteredResult[fIndex].metadata = sortedMetadata[farr.tokenId] || { chain_id: chain.id };
+                });
+
+                // nft with metadata
+                nfts.push(filteredResult);
+            } // if
+        }) // map
     );
 
-    return nfts;
+    return _.flatten(nfts);
 }
 
 /**
@@ -416,7 +465,7 @@ export const getMetadata = async(hash: string) => {
     `;
 
     const metadata: any = await db.executeQueryForSingleResult(metaQuery);
-    return metadata;
+    return metadata || {};
 }
 
 /**
@@ -451,3 +500,4 @@ export const getMintData = async (chainId : number) => {
 
     return hash;
 }
+

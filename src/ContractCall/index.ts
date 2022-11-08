@@ -26,28 +26,28 @@ export default class ContractCall {
         this.signer = new ethers.Wallet(`${process.env.PRIVATE_KEY}`, this.provider);
         this.batchProvider = new ethers.providers.JsonRpcBatchProvider(chain.rpc);
         this.batchSigner = new ethers.Wallet(`${process.env.PRIVATE_KEY}`, this.batchProvider);
-        this.marketplaceContract = new ethers.Contract(chain.linkerContract, MarketplaceContract.abi, this.batchSigner);
-        this.batchMarketplaceContract = new ethers.Contract(chain.linkerContract, MarketplaceContract.abi, this.batchSigner);
+        this.marketplaceContract = new ethers.Contract(chain.nftMarketplace, MarketplaceContract.abi, this.batchSigner);
+        this.batchMarketplaceContract = new ethers.Contract(chain.nftMarketplace, MarketplaceContract.abi, this.batchSigner);
     }
 
     checkNftClaimed = async(tokenId: string) => {
-        const owner = this.marketplaceContract.ownerOf(tokenId);
+        const owner = await this.marketplaceContract.ownerOf(tokenId);
         console.log(`claimed by: ${owner}`);
         return await owner != (0).toString(16);
     }
 
-    getAllNFTs = async(listedOnly: boolean = false) => {
-        let data: ListedToken[] = this.marketplaceContract.getAllNFTs(listedOnly);
+    getAllNFTs = async(listedOnly: boolean = false): Promise<ListedToken[]> => {
+        let data: ListedToken[] = await this.marketplaceContract.getAllNFTs(listedOnly);
         data = _.filter(data, (d: ListedToken) => {
-            return d.tokenId != 0;
+            return (d.tokenId).toString() != "0";
         });
         return data;
     }
 
     getHolderNFTs = async(holder: string, listedOnly: boolean = false) => {
-        let data: ListedToken[] = this.marketplaceContract.getHolderNFTs(holder, listedOnly);
+        let data: ListedToken[] = await this.marketplaceContract.getHolderNFTs(holder, listedOnly);
         data = _.filter(data, (d: ListedToken) => {
-            return d.tokenId != 0;
+            return (d.tokenId).toString() != "0";
         });
         return data;
     }
