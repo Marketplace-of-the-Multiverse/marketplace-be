@@ -1,0 +1,26 @@
+{
+  "total": 1,
+  "page": 1,
+  "page_size": 100,
+  "cursor": null,
+  "result": [
+    {
+      "token_address": "0x0dbacd0924dcce6ee085ca96ebd32f9ebd4509ef",
+      "token_id": "2",
+      "owner_of": "0x1cc5f2f37a4787f02e18704d252735fb714f35ec",
+      "block_number": "24407755",
+      "block_number_minted": "24407755",
+      "token_hash": "3ed1ca9ff28c55dc58a3e6236786049b",
+      "amount": "1",
+      "contract_type": "ERC721",
+      "name": "NFTMarketplace",
+      "symbol": "NFTM",
+      "token_uri": "https://api.npoint.io/efaecf7cee7cfe142516",
+      "metadata": "{\"image\":\"https://i.imgur.com/WLwE54i.png\"}",
+      "last_token_uri_sync": "2022-11-08T08:03:29.290Z",
+      "last_metadata_sync": "2022-11-08T08:03:38.873Z",
+      "minter_address": "0x1cc5f2f37a4787f02e18704d252735fb714f35ec"
+    }
+  ],
+  "status": "SYNCED"
+}
