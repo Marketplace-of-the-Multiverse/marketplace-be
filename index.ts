@@ -115,7 +115,6 @@ app.post('/mint', async function(req, res) {
         // insert action
         const nft: Nft = {
             chain_id: req.body.fromChain,
-            token_id: req.body.tokenId,
             hash: req.body.hash,
             name: req.body.name,
             creator: req.body.address,

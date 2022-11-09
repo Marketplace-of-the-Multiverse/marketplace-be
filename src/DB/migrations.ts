@@ -16,7 +16,6 @@ export default [
             CREATE TABLE nft (
                 id serial PRIMARY KEY,
                 chain_id int not null,
-                token_id int not null,
                 hash varchar(32) NOT NULL default '',
                 name varchar(255) NOT NULL default '',
                 creator varchar(50) not null,
@@ -31,12 +30,10 @@ export default [
         id: 3,
         query: `
             CREATE INDEX nft_chain_id ON nft (chain_id);
-            CREATE INDEX nft_token_id ON nft (token_id);
             CREATE INDEX nft_hash ON nft (hash);
         `,
         rollback_query: `
             DROP INDEX nft_chain_id;
-            DROP INDEX nft_token_id;
             DROP INDEX nft_hash;
         `
     },
@@ -46,7 +43,7 @@ export default [
             CREATE TABLE user_action_log (
                 id serial PRIMARY KEY,
                 address varchar(50) not null,
-                token_id int not null,
+                token_id int,
                 from_chain int not null,
                 to_chain int not null,
                 is_crosschain bool not null default false,
@@ -61,9 +58,11 @@ export default [
         id: 5,
         query: `
             CREATE INDEX ua_token_id ON user_action_log (token_id);
+            CREATE INDEX ua_address ON user_action_log (address);
         `,
         rollback_query: `
             DROP INDEX ua_token_id;
+            DROP INDEX ua_address;
         `
     }
 ]

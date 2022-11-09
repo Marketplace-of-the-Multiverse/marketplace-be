@@ -60,7 +60,6 @@ export const insertUserActionLog = async(data: UserActionLog) => {
     ];
 
     let values: any[][] = [];
-    console.log(data);
 
     const flattenData = _.values(data);
     values.push(flattenData);
@@ -80,7 +79,6 @@ export const insertNft = async(data: Nft, log: UserActionLog) => {
     const table = 'nft';
     const columns = [
         'chain_id',
-        'token_id',
         'hash',
         'name',
         'creator',
@@ -390,7 +388,7 @@ export const getHolderNftFromEvm = async (holder:string, listedOnly: boolean = f
 
                 // get result from evm
                 const result: ListedToken[] = await etherCall.getHolderNFTs(holder, listedOnly);
-                
+
                 // format data, remove all the indexes
                 const formattedResult: ListedToken[] = [];
                 for (let re of result) {
@@ -479,24 +477,27 @@ export const getMintData = async (chainId : number) => {
     let checkDB = false;
     // let checkContract = false;
     let randomSalt;
+    let hash: string = '';
 
     // check if token id claimed
     // while (! checkDB || ! checkContract) { // generate token between 16 ~ 32 chars
     while (! checkDB) { // generate token between 16 ~ 32 chars
         randomSalt = generateRandomNumberChar(16, 32);
+
+        hash = getHash(`${ new Date().getTime() }_${randomSalt}`);
+
         // checkDB for duplicated tokenId
-        const query = `SELECT count(token_id) as count FROM nft WHERE token_id = ${randomSalt} AND chain_id = ${chainId};`;
+        const query = `SELECT count(id) as count FROM nft WHERE hash = "${hash}"`;
         const res = await db.executeQueryForSingleResult<{ count: number }>(query);
-        checkDB = Number(res?.count) === 0 ? true : false;
+
+        checkDB = Number(res?.count) === 0 || _.isNil(res) ? true : false;
 
         // checkContract (Ignore first)
         // const claimed = await etherCall.checkNftClaimed(randomSalt);
         // // if not a valid nextTokenId
         // checkContract = claimed == 1 ? false : true;
+        // get new token hash (unixtime + random number salt)
     }
-
-    // get new token hash (unixtime + random number salt)
-    const hash = getHash(`${ new Date().getTime() }_${randomSalt}`);
 
     return hash;
 }

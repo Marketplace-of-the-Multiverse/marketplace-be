@@ -1,6 +1,5 @@
 export type Nft = {
     chain_id: number,
-    token_id: number,
     hash: string,
     name: string,
     creator: string,
