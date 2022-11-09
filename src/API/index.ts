@@ -160,73 +160,73 @@ export const getAllNftFromMoralis = async (chainId : number) => { // get chain n
  * @param { number } chainId
  */
 export const getAllNftFromEvm = async (listedOnly: boolean = false) => { // get chain nft contract address
-    // const chain: ChainConfig = _.find(chains, { id: chainId }) as ChainConfig;
-
-    // if (_.isNil(chain) || !_.has(chain, 'nftMarketplace')) {
-    //     throw Error("Invalid Chain");
-    // }
     let nfts: ListedToken[][] = [];
     await Promise.all(
         _.map(chains, async(chain: ChainConfig) => {
-            if (_.includes(AvailableChain, chain.id)) {
-                // initiate ethers
-                const etherCall = new ContractCall(chain.id);
-                // raw result which included indexes and key/value pair
-                let result: ListedToken[] = await etherCall.getAllNFTs(listedOnly);
-
-                // format data, remove all the indexes
-                const formattedResult: ListedToken[] = [];
-                for (let re of result) {
-                    const temp: any = {
-                        tokenId: (re.tokenId).toString(),
-                        owner: re.owner,
-                        seller: re.seller,
-                        price: (re.price).toString(),
-                        currentlyListed: re.currentlyListed,
-                        reservedUntil: Number(re.reservedUntil.toString()),
-                        lastReservedBy: re.lastReservedBy
-                    };
-
-                    formattedResult.push(temp);
-                }
-
-                let filteredResult: ListedToken[] = [];
-                const nftIds = _.map(formattedResult as ListedToken[], (arr) => arr.tokenId);
-
-                // filter listed or all
-                _.map(formattedResult as ListedToken[], (arr) => {
-                    if (listedOnly && arr.currentlyListed) {
-                        filteredResult.push(arr);
-                        nftIds.push(arr.tokenId);
-                    } else if (!listedOnly) {
-                        filteredResult.push(arr);
-                        nftIds.push(arr.tokenId);
+            try {
+                if (_.includes(AvailableChain, chain.id)) {
+                    // initiate ethers
+                    const etherCall = new ContractCall(chain.id);
+                    // raw result which included indexes and key/value pair
+                    let result: ListedToken[] = await etherCall.getAllNFTs(listedOnly);
+    
+                    // format data, remove all the indexes
+                    const formattedResult: ListedToken[] = [];
+                    for (let re of result) {
+                        const temp: any = {
+                            tokenId: (re.tokenId).toString(),
+                            owner: re.owner,
+                            seller: re.seller,
+                            price: (re.price).toString(),
+                            currentlyListed: re.currentlyListed,
+                            tokenURI: re.tokenURI,
+                            hash: (re.tokenURI).substring((re.tokenURI).lastIndexOf('/') + 1),
+                            reservedUntil: Number(re.reservedUntil.toString()),
+                            lastReservedBy: re.lastReservedBy
+                        };
+    
+                        formattedResult.push(temp);
                     }
-                });
-
-                const nftQuery = `
-                    SELECT
-                        *
-                    FROM nft
-                    WHERE token_id IN (${ _.join(nftIds, ', ') }) AND chain_id = ${chain.id};
-                `;
-
-                const db = new DB();
-
-                const metadata: any = await db.executeQueryForResults(nftQuery);
-                const sortedMetadata: any = {};
-                _.map(metadata, (md) => {
-                    sortedMetadata[md.token_id] = md;
-                });
-
-                // get metadata from db
-                _.map(filteredResult, (farr, fIndex) => {
-                    filteredResult[fIndex].metadata = sortedMetadata[farr.tokenId] || { chain_id: chain.id };
-                });
-
-                // nft with metadata
-                nfts.push(filteredResult);
-            } // if
+    
+                    let filteredResult: any[] = [];
+                    let nftHash: string[] = [];
+    
+                    // filter listed or all
+                    _.map(formattedResult as any[], (arr) => {
+                        if (listedOnly && arr.currentlyListed) {
+                            filteredResult.push(arr);
+                            nftHash.push(`'${arr.hash}'`);
+                        } else if (!listedOnly) {
+                            filteredResult.push(arr);
+                            nftHash.push(`'${arr.hash}'`);
+                        }
+                    });
+    
+                    const nftQuery = `
+                        SELECT
+                            *
+                        FROM nft
+                        WHERE hash IN (${ _.join(nftHash, ', ') });
+                    `;
+    
+                    const db = new DB();
+    
+                    const metadata: any = await db.executeQueryForResults(nftQuery);
+    
+                    const sortedMetadata: any = {};
+                    _.map(metadata, (md) => {
+                        sortedMetadata[md.hash] = md;
+                    });
+    
+                    // get metadata from db
+                    _.map(filteredResult, (farr, fIndex) => {
+                        filteredResult[fIndex].metadata = sortedMetadata[farr.hash] || { chain_id: chain.id };
+                    });
+    
+                    // nft with metadata
+                    nfts.push(filteredResult);
+                } // if
+            } catch {}
         }) // map
     );
 
@@ -378,69 +378,74 @@ export const getUserActionLog = async(address: string) => {
 }
 
 export const getHolderNftFromEvm = async (holder:string, listedOnly: boolean = false) => {
+    holder = sanitizeAddress(holder);
     let nfts: ListedToken[][] = [];
     await Promise.all(
         _.map(chains, async(chain: ChainConfig) => {
-            if (_.includes(AvailableChain, chain.id)) {
-                // initiate ethers
-                const etherCall = new ContractCall(chain.id);
-
-                // get result from evm
-                const result: ListedToken[] = await etherCall.getHolderNFTs(holder, listedOnly);
-
-                // format data, remove all the indexes
-                const formattedResult: ListedToken[] = [];
-                for (let re of result) {
-                    const temp: any = {
-                        tokenId: (re.tokenId).toString(),
-                        owner: re.owner,
-                        seller: re.seller,
-                        price: (re.price).toString(),
-                        currentlyListed: re.currentlyListed,
-                        reservedUntil: Number(re.reservedUntil.toString()),
-                        lastReservedBy: re.lastReservedBy
-                    };
-
-                    formattedResult.push(temp);
-                }
-
-                let filteredResult: ListedToken[] = [];
-                const nftIds = _.map(formattedResult as ListedToken[], (arr) => arr.tokenId);
-
-                // filter listed or all
-                _.map(formattedResult, (arr) => {
-                    if (listedOnly && arr.currentlyListed) {
-                        filteredResult.push(arr);
-                        nftIds.push(arr.tokenId);
-                    } else if (!listedOnly) {
-                        filteredResult.push(arr);
-                        nftIds.push(arr.tokenId);
+            try {
+                if (_.includes(AvailableChain, chain.id)) {
+                    // initiate ethers
+                    const etherCall = new ContractCall(chain.id);
+    
+                    // get result from evm
+                    const result: ListedToken[] = await etherCall.getHolderNFTs(holder, listedOnly);
+    
+                    // format data, remove all the indexes
+                    const formattedResult: ListedToken[] = [];
+                    for (let re of result) {
+                        const temp: any = {
+                            tokenId: (re.tokenId).toString(),
+                            owner: re.owner,
+                            seller: re.seller,
+                            price: (re.price).toString(),
+                            currentlyListed: re.currentlyListed,
+                            tokenURI: re.tokenURI,
+                            hash: (re.tokenURI).substring((re.tokenURI).lastIndexOf('/') + 1),
+                            reservedUntil: Number(re.reservedUntil.toString()),
+                            lastReservedBy: re.lastReservedBy
+                        };
+    
+                        formattedResult.push(temp);
                     }
-                });
-
-                const nftQuery = `
-                    SELECT
-                        *
-                    FROM nft
-                    WHERE token_id IN (${ _.join(nftIds, ', ') }) AND chain_id = ${chain.id};
-                `;
-
-                const db = new DB();
-
-                const metadata: any = await db.executeQueryForResults(nftQuery);
-                const sortedMetadata: any = {};
-                _.map(metadata, (md) => {
-                    sortedMetadata[md.token_id] = md;
-                });
-
-                // get metadata from db
-                _.map(filteredResult, (farr, fIndex) => {
-                    filteredResult[fIndex].metadata = sortedMetadata[farr.tokenId] || { chain_id: chain.id };
-                });
-
-                // nft with metadata
-                nfts.push(filteredResult);
-            } // if
+    
+                    let filteredResult: any[] = [];
+                    let nftHash: string[] = [];
+    
+                    // filter listed or all
+                    _.map(formattedResult as any[], (arr) => {
+                        if (listedOnly && arr.currentlyListed) {
+                            filteredResult.push(arr);
+                            nftHash.push(`'${arr.hash}'`);
+                        } else if (!listedOnly) {
+                            filteredResult.push(arr);
+                            nftHash.push(`'${arr.hash}'`);
+                        }
+                    });
+    
+                    const nftQuery = `
+                        SELECT
+                            *
+                        FROM nft
+                        WHERE hash IN (${ _.join(nftHash, ', ') });
+                    `;
+    
+                    const db = new DB();
+    
+                    const metadata: any = await db.executeQueryForResults(nftQuery);
+                    const sortedMetadata: any = {};
+                    _.map(metadata, (md) => {
+                        sortedMetadata[md.hash] = md;
+                    });
+    
+                    // get metadata from db
+                    _.map(filteredResult, (farr, fIndex) => {
+                        filteredResult[fIndex].metadata = sortedMetadata[farr.hash] || { chain_id: chain.id };
+                    });
+    
+                    // nft with metadata
+                    nfts.push(filteredResult);
+                } // if
+            } catch {}
         }) // map
     );
 

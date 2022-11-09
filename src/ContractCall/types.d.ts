@@ -4,6 +4,7 @@ export type ListedToken = {
     seller: string;
     price: string;
     currentlyListed: boolean;
+    tokenURI: string;
     reservedUntil: number;
     lastReservedBy: string;
     metadata?: object
