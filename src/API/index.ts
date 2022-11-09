@@ -284,7 +284,6 @@ export const getTokenTxs = async(chainId: number, tokenId: number) => {
 
     const data: any = await axiosCall(headers, config);
 
-    console.log(data);
     // do some filter to format nice data output
     // prev.owner -> price -> curr.owner
 

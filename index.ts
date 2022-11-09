@@ -141,7 +141,6 @@ app.post('/mint', async function(req, res) {
     }
 
     catch(e) {
-        console.log(e);
         return res.status(400).send("Unknown Error");
     }
 });
