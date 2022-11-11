@@ -36,6 +36,7 @@ app.use(cors({
     // origin: whitelists,
     credentials: true
 }));
+app.use('/logo', express.static(__dirname + '/Logo'));
 
 let http = createServer(app);
 
