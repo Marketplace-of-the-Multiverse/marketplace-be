@@ -15,4 +15,5 @@ export type ChainConfig = {
     messageReceiver: string;
     nftMarketplace: string;
     crossChainToken: string;
+    gateway: string;
 }

@@ -13,10 +13,11 @@ export const BSCTEST: ChainConfig = {
         symbol: 'BNB',
     },
     blockExplorerUrl: 'https://testnet.bscscan.com',
-    messageSender: "0xa3da6738aE8a948CBe3096ac37b0cb4c17103a75",
-    messageReceiver: "0xFe3e0CD741a663e1cb140680142b94d1fCF0066F",
-    nftMarketplace: "0x8dD6097470d671C69d48AFc946495d699787608a",
-    crossChainToken: '0xc2fA98faB811B785b81c64Ac875b31CC9E40F9D2'
+    messageSender: "0x441Ac900637fE494710384De52be132Fe48Ed1C9",
+    messageReceiver: "0xCb7ba4b6bc2a2D6b9C492efebFe029104d8dFa75",
+    nftMarketplace: "0x4e3425A69b7e117dA7f81E86597d03eaB2DB8C42",
+    crossChainToken: '0xc2fA98faB811B785b81c64Ac875b31CC9E40F9D2',
+    gateway: "0x4D147dCb984e6affEEC47e44293DA442580A3Ec0"
 };
 
 export const MUMBAI: ChainConfig = {
@@ -34,10 +35,11 @@ export const MUMBAI: ChainConfig = {
         symbol: 'MATIC',
     },
     blockExplorerUrl: 'https://mumbai.polygonscan.com/',
-    messageSender: "0x57A25f4C779fFE289cc858F9ca2d3A240622EC19",
-    messageReceiver: "0x8235E54719E8b0b825a1d15F5df06135fB0a8885",
-    nftMarketplace: "0xC52349D185455caDAa02bEF9Fc165A2234017cff",
-    crossChainToken: '0x2c852e740B62308c46DD29B982FBb650D063Bd07'
+    messageSender: "0x031B40fEE0aeb1417C95Bb2771695135895560F5",
+    messageReceiver: "0x8163D2Be2fcCEDB6f584be1128254626c5a30eB3",
+    nftMarketplace: "0x1A1BA67d116BaA7774B80Ce6c899923ee1b061A7",
+    crossChainToken: '0x2c852e740B62308c46DD29B982FBb650D063Bd07',
+    gateway: "0xBF62ef1486468a6bd26Dd669C06db43dEd5B849B"
 };
 
 export const AVAXFUJI: ChainConfig = {
@@ -52,10 +54,11 @@ export const AVAXFUJI: ChainConfig = {
         symbol: 'AVAX',
     },
     blockExplorerUrl: 'https://testnet.snowtrace.io/',
-    messageSender: "0xbC34FC51951FC38eC9Bad81a93EA1F53BF34d035",
-    messageReceiver: "0x447214f0DEbFf551a7553961585c7493BE657f87",
-    nftMarketplace: "0x7E1D1c1EA091B81B1b572aB56B40843B760cD9eD",
-    crossChainToken: '0x57F1c63497AEe0bE305B8852b354CEc793da43bB'
+    messageSender: "0x6d138BdCF2D73948600e857c59752d977d0Bb18F",
+    messageReceiver: "0x878bEaf257c5364eD58Ffdba2184F184d5c35F42",
+    nftMarketplace: "0x507b8a21e51e7DD0C53Ea925F61E5b21426995e0",
+    crossChainToken: '0x57F1c63497AEe0bE305B8852b354CEc793da43bB',
+    gateway: "0xC249632c2D40b9001FE907806902f63038B737Ab"
 };
 
 export const ETH: ChainConfig = {
@@ -73,7 +76,8 @@ export const ETH: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const BSC: ChainConfig = {
@@ -91,7 +95,8 @@ export const BSC: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const AVAX: ChainConfig = {
@@ -109,7 +114,8 @@ export const AVAX: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const POLYGON: ChainConfig = {
@@ -127,7 +133,8 @@ export const POLYGON: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const ARB: ChainConfig = {
@@ -145,7 +152,8 @@ export const ARB: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const OP: ChainConfig = {
@@ -163,7 +171,8 @@ export const OP: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const CRO: ChainConfig = {
@@ -181,7 +190,8 @@ export const CRO: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const FANTOM: ChainConfig = {
@@ -196,10 +206,11 @@ export const FANTOM: ChainConfig = {
         symbol: 'FTM',
     },
     blockExplorerUrl: 'https://ftmscan.com',
-    messageSender: "0x18012f62c4393900c5F70821839a2fD0e0270781",
-    messageReceiver: "0xceb2f6E3fC0c771f56C4d2Bc96DA18b10a9474fD",
-    nftMarketplace: "0x80Aea4BCD7c28FBc20624FD154494aE9717aaBc3",
-    crossChainToken: '0x75Cc4fDf1ee3E781C1A3Ee9151D5c6Ce34Cf5C61'
+    messageSender: "0x6b096cd02e7FB3D91c138A09cFC857a9e4f3D630",
+    messageReceiver: "0xC58d83e71085C2D59c5cf623003F3D961726C629",
+    nftMarketplace: "0xdaBBc6597702F18Dc3d5F883d2b9b0184e84d20a",
+    crossChainToken: '0x75Cc4fDf1ee3E781C1A3Ee9151D5c6Ce34Cf5C61',
+    gateway: "0x97837985Ec0494E7b9C71f5D3f9250188477ae14"
 };
 
 export const KLAYTN: ChainConfig = {
@@ -217,7 +228,8 @@ export const KLAYTN: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const KAVA: ChainConfig = {
@@ -235,7 +247,8 @@ export const KAVA: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const GNO: ChainConfig = {
@@ -253,7 +266,8 @@ export const GNO: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const AURORA: ChainConfig = {
@@ -271,7 +285,8 @@ export const AURORA: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const HECO: ChainConfig = {
@@ -289,7 +304,8 @@ export const HECO: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const FUSION: ChainConfig = {
@@ -307,7 +323,8 @@ export const FUSION: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const CELO: ChainConfig = {
@@ -325,7 +342,8 @@ export const CELO: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const EVMOS: ChainConfig = {
@@ -343,7 +361,8 @@ export const EVMOS: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const DOGE: ChainConfig = {
@@ -361,7 +380,8 @@ export const DOGE: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const OKX: ChainConfig = {
@@ -379,7 +399,8 @@ export const OKX: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const BOBA: ChainConfig = {
@@ -397,7 +418,8 @@ export const BOBA: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const MOONBASE: ChainConfig = {
@@ -412,10 +434,11 @@ export const MOONBASE: ChainConfig = {
         symbol: 'DEV',
     },
     blockExplorerUrl: 'https://moonbase.moonscan.io',
-    messageSender: "0x5611aE4B377D1A9a0933743cb0Ec8b3b6fD95B50",
-    messageReceiver: "0xfe4dBE7b4C41079BBD8ad52A238Bd695acF9848d",
-    nftMarketplace: "0xb00f1E3188959531Ce0B1955A7719119d49AECA3",
-    crossChainToken: '0xD1633F7Fb3d716643125d6415d4177bC36b7186b'
+    messageSender: "0x5a77e26B974Fb626cDc5c80aE2AD5B439a8B3AF1",
+    messageReceiver: "0x2F9a04478eCc038a7E4f2516b65A264241846015",
+    nftMarketplace: "0xC9Dd91566Dc13ff66131eeEAAe2B8337702f1aB0",
+    crossChainToken: '0xD1633F7Fb3d716643125d6415d4177bC36b7186b',
+    gateway: "0x5769D84DD62a6fD969856c75c7D321b84d455929"
 };
 
 export const MOVR: ChainConfig = {
@@ -433,7 +456,8 @@ export const MOVR: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const GLMR: ChainConfig = {
@@ -451,7 +475,8 @@ export const GLMR: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 export const ONE: ChainConfig = {
@@ -469,7 +494,8 @@ export const ONE: ChainConfig = {
     messageSender: '',
     messageReceiver: '',
     nftMarketplace: '',
-    crossChainToken: ''
+    crossChainToken: '',
+    gateway: ''
 };
 
 
