@@ -180,13 +180,13 @@ export const getAllNftFromEvm = async (listedOnly: boolean = false) => { // get 
                             price: (re.price).toString(),
                             currentlyListed: re.currentlyListed,
                             tokenURI: re.tokenURI,
-                            hash: (re.tokenURI).substring((re.tokenURI).lastIndexOf('/') + 1),
-                            reservedUntil: Number(re.reservedUntil.toString()),
-                            lastReservedBy: re.lastReservedBy
+                            hash: (re.tokenURI).substring((re.tokenURI).lastIndexOf('/') + 1)
                         };
 
                         formattedResult.push(temp);
+                        console.log(temp);
                     }
+
 
                     let filteredResult: any[] = [];
                     let nftHash: string[] = [];
@@ -401,9 +401,7 @@ export const getHolderNftFromEvm = async (holder:string, listedOnly: boolean = f
                             price: (re.price).toString(),
                             currentlyListed: re.currentlyListed,
                             tokenURI: re.tokenURI,
-                            hash: (re.tokenURI).substring((re.tokenURI).lastIndexOf('/') + 1),
-                            reservedUntil: Number(re.reservedUntil.toString()),
-                            lastReservedBy: re.lastReservedBy
+                            hash: (re.tokenURI).substring((re.tokenURI).lastIndexOf('/') + 1)
                         };
 
                         formattedResult.push(temp);
