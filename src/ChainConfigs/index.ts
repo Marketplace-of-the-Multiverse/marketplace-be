@@ -13,9 +13,9 @@ export const BSCTEST: ChainConfig = {
         symbol: 'BNB',
     },
     blockExplorerUrl: 'https://testnet.bscscan.com',
-    messageSender: "0x5851ababf1e64B73f5a4844639321A25785cdA81",
-    messageReceiver: "0x5b72b3eE4b237A8eB5FB606abFf1E8E58F9f25a0",
-    nftMarketplace: "0xbd906CC45ED751f0426034D42BcF84bd58Fac510",
+    messageSender: "0x8571E0Cbdc2CB33FfD8F3344f6072e4667991aA3",
+    messageReceiver: "0xE69Db53ac6111Ee9dbd3A15Fc6aCDF67e22DC338",
+    nftMarketplace: "0x906A2bE621A04e08e2e304F54C3e1866E28DbF27",
     crossChainToken: '0xc2fA98faB811B785b81c64Ac875b31CC9E40F9D2',
     gateway: "0x4D147dCb984e6affEEC47e44293DA442580A3Ec0"
 };
@@ -35,9 +35,9 @@ export const MUMBAI: ChainConfig = {
         symbol: 'MATIC',
     },
     blockExplorerUrl: 'https://mumbai.polygonscan.com/',
-    messageSender: "0x80407181E442e6B772dE3FAa82947a46a09f3889",
-    messageReceiver: "0x5010dD918042365C8c9065d0f4E1bd20E354416e",
-    nftMarketplace: "0x575E65efC03b2FC2c9383C4af46f285e992EB270",
+    messageSender: "0x8cDA877E86ab3B49181cbc418Af59761aeAD83a4",
+    messageReceiver: "0xBBCfaCC1e911dFc9A2C5dF0AC41457789ecF1dC2",
+    nftMarketplace: "0x1519FA548320cD19F6037255183B1E0657F9A954",
     crossChainToken: '0x2c852e740B62308c46DD29B982FBb650D063Bd07',
     gateway: "0xBF62ef1486468a6bd26Dd669C06db43dEd5B849B"
 };
@@ -54,9 +54,9 @@ export const AVAXFUJI: ChainConfig = {
         symbol: 'AVAX',
     },
     blockExplorerUrl: 'https://testnet.snowtrace.io/',
-    messageSender: "0xCb57591351314CbEDBee1E95025A0E0c8a4e7DEe",
-    messageReceiver: "0x424e70603609dabd677bAF90a88E206c3ca6DD76",
-    nftMarketplace: "0xA593A0177C69192139e0B228Fb70835170580929",
+    messageSender: "0x7e50DD167eD5FD1e45Baf7c5C87142a96ed0c8B5",
+    messageReceiver: "0x156cE9304b9e28c93c02C4BfeFbD09e41b541b94",
+    nftMarketplace: "0x4a48877DD59A2E601d8E225Ccd05D4E7d03d094D",
     crossChainToken: '0x57F1c63497AEe0bE305B8852b354CEc793da43bB',
     gateway: "0xC249632c2D40b9001FE907806902f63038B737Ab"
 };
@@ -206,9 +206,9 @@ export const FANTOM: ChainConfig = {
         symbol: 'FTM',
     },
     blockExplorerUrl: 'https://ftmscan.com',
-    messageSender: "0xd66BaFd419D475f7d5bA4278FcF1108961b05F27",
-    messageReceiver: "0xB014eC8B9b80C09e1b7090B46f1D1EC3Cd08dE98",
-    nftMarketplace: "0x5b821902aa68A89d62c0EF07AED783ECC253E083",
+    messageSender: "0xfaDAa0Ea134A095a6DafDAfc6fF36812f29e240f",
+    messageReceiver: "0x2BBf0108e04599bc581C28E519ddb61324A0b8B9",
+    nftMarketplace: "0x6e56C8faAf544aAdB3ffa5fFa38A4d463329852B",
     crossChainToken: '0x75Cc4fDf1ee3E781C1A3Ee9151D5c6Ce34Cf5C61',
     gateway: "0x97837985Ec0494E7b9C71f5D3f9250188477ae14"
 };
@@ -434,9 +434,9 @@ export const MOONBASE: ChainConfig = {
         symbol: 'DEV',
     },
     blockExplorerUrl: 'https://moonbase.moonscan.io',
-    messageSender: "0x031B40fEE0aeb1417C95Bb2771695135895560F5",
-    messageReceiver: "0x8163D2Be2fcCEDB6f584be1128254626c5a30eB3",
-    nftMarketplace: "0x1A1BA67d116BaA7774B80Ce6c899923ee1b061A7",
+    messageSender: "0x4B090ae56afCdfaD90D7A34860B8bBf416D1E6De",
+    messageReceiver: "0x0E7a28fE7a19d8e578d8AD14b4F59be899524e72",
+    nftMarketplace: "0xE402F1CEec34b639c4dB8B9Ab7ed75414bf7e3B0",
     crossChainToken: '0xD1633F7Fb3d716643125d6415d4177bC36b7186b',
     gateway: "0x5769D84DD62a6fD969856c75c7D321b84d455929"
 };
