@@ -175,6 +175,33 @@ app.post('/listNft', async function(req, res) {
 });
 
 // logging purpose only
+app.post('/buyNft', async function(req, res) {
+    try {
+        // insert action
+        const log: UserActionLog = {
+            address: req.body.address,
+            token_id: req.body.tokenId,
+            from_chain: req.body.fromChain,
+            to_chain: req.body.toChain,
+            is_crosschain: req.body.fromChain == req.body.toChain,
+            action: 'buy',
+            tx_hash: req.body.tx
+        }
+
+        const insert1: any = await insertUserActionLog(log);
+
+        if (_.has(insert1, 'id')) {
+            return res.json({ 'success': true });
+        }
+        return res.json({ 'success': false });
+    }
+
+    catch(e) {
+        return res.status(400).send("Unknown Error");
+    }
+});
+
+// logging purpose only
 app.post('/delistNft', async function(req, res) {
     try {
         // insert action
