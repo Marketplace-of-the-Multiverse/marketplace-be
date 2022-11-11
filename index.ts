@@ -11,7 +11,8 @@ import {
     getHolderNftFromEvm,
     insertNft,
     getMetadata,
-    getApproved
+    getApproved,
+    getUserActionLog
 } from './src/API';
 import _ from 'lodash';
 import path from 'path';
@@ -114,9 +115,10 @@ app.post('/mint', async function(req, res) {
     // Images to be uploaded to Moralis IPFS
     // https://www.youtube.com/watch?v=8YGPCNhuyKU
     try {
+
         // insert action
         const nft: Nft = {
-            chain_id: req.body.fromChain,
+            chain_id: (req.body.fromChain == req.body.toChain) ? req.body.fromChain : req.body.toChain,
             hash: req.body.hash,
             name: req.body.name,
             creator: req.body.address,
@@ -235,6 +237,15 @@ app.get('/checkApproval/:chainId/:tokenId', async function(req, res) {
     const tokenId = Number(req.params['tokenId']);
     const chainId = Number(req.params['chainId']);
     return res.json({ 'success': await getApproved(chainId, tokenId) });
+})
+
+app.get('/userActionLog/:address', async function(req, res) {
+    const address = req.params['address'];
+    if (_.isNil(address)) {
+        return false;
+    }
+
+    return res.json({ 'success': await getUserActionLog(address) });
 })
 
 http.listen(port, () => {

@@ -184,7 +184,6 @@ export const getAllNftFromEvm = async (listedOnly: boolean = false) => { // get 
                         };
 
                         formattedResult.push(temp);
-                        console.log(temp);
                     }
 
 
@@ -312,6 +311,7 @@ export const getUserActionLog = async(address: string) => {
         FROM user_action_log
         WHERE address = '${address}'
         ORDER BY created_at DESC
+        LIMIT 10
     `;
 
     const logs: any = await db.executeQueryForResults(logQuery);
