@@ -52,6 +52,11 @@ export default class ContractCall {
         return data;
     }
 
+    getApproved = async(tokenId: number) => {
+        const approved = await this.marketplaceContract.getApproved(tokenId);
+        return approved;
+    }
+
     // checkBulkTokenOrigin = async(tokens: string[]) => {
     //     // Queue some new things...
     //     let promises: any = [];

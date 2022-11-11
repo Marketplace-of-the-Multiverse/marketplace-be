@@ -254,6 +254,7 @@ export const estimateAxelarGasFee = async(fromChainId: number, toChainId: number
         1000000,
         2
     );
+    console.log(gasFee);
 
     return gasFee;
 }
@@ -504,5 +505,22 @@ export const getMintData = async (chainId : number) => {
     }
 
     return hash;
+}
+
+export const getApproved = async (chainId: number, tokenId: number) => { // get chain nft contract address
+    const chain: any = _.find(chains, {id: chainId});
+    if (_.isNil(chain) || !_.includes(AvailableChain, chain.id)) {
+        return false;
+    }
+
+    // initiate ethers
+    const etherCall = new ContractCall(chain.id);
+    // raw result which included indexes and key/value pair
+    const result = await etherCall.getApproved(tokenId);
+    console.log(result);
+    if (result == '0x0000000000000000000000000000000000000000') {
+        return false;
+    }
+    return true;
 }
 

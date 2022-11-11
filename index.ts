@@ -10,7 +10,8 @@ import {
     getAllNftFromEvm,
     getHolderNftFromEvm,
     insertNft,
-    getMetadata
+    getMetadata,
+    getApproved
 } from './src/API';
 import _ from 'lodash';
 import path from 'path';
@@ -198,6 +199,15 @@ app.post('/delistNft', async function(req, res) {
         return res.status(400).send("Unknown Error");
     }
 });
+
+app.get('/checkApproval/:chainId/:tokenId', async function(req, res) {
+    if (_.isNil(req.params['tokenId']) || _.isNil(req.params['chainId'])) {
+        return false;
+    }
+    const tokenId = Number(req.params['tokenId']);
+    const chainId = Number(req.params['chainId']);
+    return res.json({ 'success': await getApproved(chainId, tokenId) });
+})
 
 http.listen(port, () => {
     console.log("I'm alive!");
